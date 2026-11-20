@@ -12,10 +12,10 @@ export type FretPositionResult =
       }
     }
 
-export function calculateFretPosition(
+export const calculateFretPosition = (
   fretNumber: number,
   scaleLength: number,
-): FretPositionResult {
+): FretPositionResult => {
   if (!Number.isInteger(fretNumber) || fretNumber < 0) {
     return {
       ok: false,
