@@ -1,13 +1,45 @@
+@font-face {
+    font-family: "Work Sans";
+    src: url("/fonts/WorkSans-VariableFont_wght.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Work Sans";
+    src: url("/fonts/WorkSans-Italic-VariableFont_wght.ttf") format("truetype");
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+/*Color pallette */
+:root {
+    --shadow-grey: hsla(309, 8%, 17%, 1);
+    --steel-blue: hsla(208, 48%, 47%, 1);
+    --soft-linen: hsla(38, 44%, 90%, 1);
+    --hunter-green: hsla(103, 30%, 30%, 1);
+    --tomato-jam: hsla(9, 59%, 46%, 1);
+}
+
+:root {
+    --text: var(--shadow-grey);
+}
+
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    color: var(--text);
+    font-family: "Work Sans", sans-serif;
 }
 
 #app {
-  min-height: 100vh;
+    min-height: 100vh;
 }
