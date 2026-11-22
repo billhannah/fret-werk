@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { settingsKey } from '../SettingsContext.ts';
+import { calculateFretPosition } from '../fret-position/fret-position.ts';
 import { calculateStringLines } from './string-lines.ts';
 
 const settingsContext = inject(settingsKey);
@@ -20,20 +21,66 @@ const stringLines = computed(() => {
   );
 });
 
-const viewBox = computed(() => {
+const heelPosition = computed(() =>
+  calculateFretPosition(
+    settingsContext.settings.numberOfFrets,
+    settingsContext.settings.scaleLength.value,
+  ),
+);
+
+const drawingError = computed(() => {
   if (!stringLines.value.ok) {
-    return undefined;
+    return stringLines.value.error.message;
+  }
+  if (!heelPosition.value.ok) {
+    return heelPosition.value.error.message;
+  }
+
+  return undefined;
+});
+
+const edgeLines = computed(() => {
+  if (!stringLines.value.ok || !heelPosition.value.ok) {
+    return [];
   }
 
   const lines = stringLines.value.value;
-  const minY = Math.min(
-    ...lines.map((line) => line.yAtNut),
-    ...lines.map((line) => line.yAtBridge),
-  );
-  const maxY = Math.max(
-    ...lines.map((line) => line.yAtNut),
-    ...lines.map((line) => line.yAtBridge),
-  );
+  const { atNut, atHeel } = settingsContext.settings.fretboardOverhang;
+  const topString = lines[0];
+  const bottomString = lines[lines.length - 1];
+  const xAtHeel = heelPosition.value.value;
+  const heelRatio = xAtHeel / settingsContext.settings.scaleLength.value;
+  const topStringYAtHeel = topString.yAtNut + (topString.yAtBridge - topString.yAtNut) * heelRatio;
+  const bottomStringYAtHeel =
+    bottomString.yAtNut + (bottomString.yAtBridge - bottomString.yAtNut) * heelRatio;
+
+  return [
+    {
+      xAtNut: topString.xAtNut,
+      yAtNut: topString.yAtNut - atNut.value,
+      xAtHeel,
+      yAtHeel: topStringYAtHeel - atHeel.value,
+    },
+    {
+      xAtNut: bottomString.xAtNut,
+      yAtNut: bottomString.yAtNut + atNut.value,
+      xAtHeel,
+      yAtHeel: bottomStringYAtHeel + atHeel.value,
+    },
+  ];
+});
+
+const viewBox = computed(() => {
+  if (!stringLines.value.ok || !heelPosition.value.ok) {
+    return undefined;
+  }
+
+  const yValues = [
+    ...stringLines.value.value.flatMap((line) => [line.yAtNut, line.yAtBridge]),
+    ...edgeLines.value.flatMap((line) => [line.yAtNut, line.yAtHeel]),
+  ];
+  const minY = Math.min(...yValues);
+  const maxY = Math.max(...yValues);
 
   return `${-margin} ${minY - margin} ${settingsContext.settings.scaleLength.value + margin * 2} ${maxY - minY + margin * 2}`;
 });
@@ -41,9 +88,9 @@ const viewBox = computed(() => {
 
 <template>
   <div class="fretboard-wrapper">
-    <p v-if="!stringLines.ok" class="drawing-error">{{ stringLines.error.message }}</p>
+    <p v-if="drawingError" class="drawing-error">{{ drawingError }}</p>
     <svg
-      v-else
+      v-else-if="stringLines.ok && heelPosition.ok"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="xMidYMid meet"
@@ -64,6 +111,15 @@ const viewBox = computed(() => {
         y1="0"
         :x2="settingsContext.settings.scaleLength.value"
         y2="0"
+      />
+      <line
+        v-for="(line, index) in edgeLines"
+        :key="`edge-${index}`"
+        class="edge-line"
+        :x1="line.xAtNut"
+        :y1="line.yAtNut"
+        :x2="line.xAtHeel"
+        :y2="line.yAtHeel"
       />
     </svg>
   </div>
