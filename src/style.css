@@ -25,6 +25,10 @@
 
 :root {
     --text: var(--shadow-grey);
+    --input-border-color: var(--shadow-grey);
+    --input-padding: 0.375rem 0.625rem;;
+    --input-border-radius: 0.375rem;
+    --input-height: 2.25rem;
 }
 
 * {

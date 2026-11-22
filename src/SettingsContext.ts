@@ -1,9 +1,10 @@
 import type { InjectionKey } from 'vue';
 
-export type lengthUnit = 'mm' | 'inch';
+export const lengthUnits = ['mm', 'cm', 'inch'] as const;
+export type lengthUnit = (typeof lengthUnits)[number];
 export type length = {
     value: number;
-    unit: lengthUnit;
+    displayUnit: lengthUnit;
 };
 
 export interface Settings {
