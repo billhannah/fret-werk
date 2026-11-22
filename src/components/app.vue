@@ -4,6 +4,7 @@ import SettingsForm from './form/settings-form.vue';
 import type { Settings, SettingsContext } from '../SettingsContext.ts';
 import { settingsKey } from '../SettingsContext.ts';
 import { provide, reactive } from 'vue';
+import FretboardDrawing from '../fretboard/fretboard-drawing.vue';
 
 const initialSettings: Settings = {
   scaleLength: {
@@ -49,7 +50,13 @@ provide(settingsKey, settingsContext);
   <Header />
   <main class="main">
     <SettingsForm />
+    <FretboardDrawing />
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.main {
+  display: grid;
+  gap: 2rem;
+}
+</style>
