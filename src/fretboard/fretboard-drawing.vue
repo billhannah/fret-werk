@@ -35,6 +35,9 @@ const drawingError = computed(() => {
   if (!heelPosition.value.ok) {
     return heelPosition.value.error.message;
   }
+  if (!fretLines.value.ok) {
+    return fretLines.value.error.message;
+  }
 
   return undefined;
 });
@@ -70,8 +73,35 @@ const edgeLines = computed(() => {
   ];
 });
 
+const fretLines = computed(() => {
+  if (!heelPosition.value.ok) {
+    return heelPosition.value;
+  }
+
+  const [topEdge, bottomEdge] = edgeLines.value;
+  const scaleLength = settingsContext.settings.scaleLength.value;
+  const frets = [];
+
+  for (let fretNumber = 1; fretNumber <= settingsContext.settings.numberOfFrets; fretNumber++) {
+    const fretPosition = calculateFretPosition(fretNumber, scaleLength);
+    if (!fretPosition.ok) {
+      return fretPosition;
+    }
+
+    const edgeRatio = fretPosition.value / heelPosition.value.value;
+    frets.push({
+      fretNumber,
+      x: fretPosition.value,
+      yAtTop: topEdge.yAtNut + (topEdge.yAtHeel - topEdge.yAtNut) * edgeRatio,
+      yAtBottom: bottomEdge.yAtNut + (bottomEdge.yAtHeel - bottomEdge.yAtNut) * edgeRatio,
+    });
+  }
+
+  return { ok: true as const, value: frets };
+});
+
 const viewBox = computed(() => {
-  if (!stringLines.value.ok || !heelPosition.value.ok) {
+  if (!stringLines.value.ok || !heelPosition.value.ok || !fretLines.value.ok) {
     return undefined;
   }
 
@@ -90,7 +120,7 @@ const viewBox = computed(() => {
   <div class="fretboard-wrapper">
     <p v-if="drawingError" class="drawing-error">{{ drawingError }}</p>
     <svg
-      v-else-if="stringLines.ok && heelPosition.ok"
+      v-else-if="stringLines.ok && heelPosition.ok && fretLines.ok"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="xMidYMid meet"
@@ -111,6 +141,15 @@ const viewBox = computed(() => {
         y1="0"
         :x2="settingsContext.settings.scaleLength.value"
         y2="0"
+      />
+      <line
+        v-for="line in fretLines.value"
+        :key="`fret-${line.fretNumber}`"
+        class="fret"
+        :x1="line.x"
+        :y1="line.yAtTop"
+        :x2="line.x"
+        :y2="line.yAtBottom"
       />
       <line
         v-for="(line, index) in edgeLines"
@@ -139,6 +178,7 @@ const viewBox = computed(() => {
 
 .fret {
   stroke: red;
+  stroke-width: 1;
 }
 
 .string {
