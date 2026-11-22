@@ -105,6 +105,11 @@ const updateDisplayUnit = (event: Event) => {
   border-left: none;
   border-radius: 0 var(--input-border-radius) var(--input-border-radius) 0;
   padding: var(--input-padding);
+  width: 6rem;
+  appearance: none;
   background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%231f1e20' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
 }
 </style>
