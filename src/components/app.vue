@@ -1,0 +1,55 @@
+<script setup lang="ts">
+import Header from './header.vue';
+import SettingsForm from './form/settings-form.vue';
+import type { Settings, SettingsContext } from '../SettingsContext.ts';
+import { settingsKey } from '../SettingsContext.ts';
+import { provide, reactive } from 'vue';
+
+const initialSettings: Settings = {
+  scaleLength: {
+    value: 647.7,
+    displayUnit: 'inch',
+  },
+  nutWidth: {
+    value: 35.5,
+    displayUnit: 'mm',
+  },
+  bridgeWidth: {
+    value: 52.4,
+    displayUnit: 'mm',
+  },
+  numberOfStrings: 6,
+  numberOfFrets: 22,
+  fretboardOverhang: {
+    atNut: {
+      value: 3.0,
+      displayUnit: 'mm',
+    },
+    atHeel: {
+      value: 4.0,
+      displayUnit: 'mm',
+    },
+  },
+};
+const settings = reactive(initialSettings);
+
+const updateSettings: SettingsContext['updateSettings'] = (key, value) => {
+  settings[key] = value;
+};
+
+const settingsContext: SettingsContext = {
+  settings,
+  updateSettings,
+};
+
+provide(settingsKey, settingsContext);
+</script>
+
+<template>
+  <Header />
+  <main class="main">
+    <SettingsForm />
+  </main>
+</template>
+
+<style scoped></style>
