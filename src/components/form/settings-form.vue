@@ -98,7 +98,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
 .settings-form {
   padding: 0 1.5rem;
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
 }
 </style>

@@ -16,6 +16,7 @@ const props = defineProps<{
 .form-field {
   display: grid;
   gap: 0.5rem;
+  min-width: 0;
 }
 .label {
   font-weight: 600;
