@@ -5,12 +5,12 @@
 export type FretPositionResult =
   | { ok: true; value: number }
   | {
-      ok: false
+      ok: false;
       error: {
-        code: 'INVALID-FRET-NUMBER' | 'INVALID-SCALE-LENGTH'
-        message: string
-      }
-    }
+        code: 'INVALID-FRET-NUMBER' | 'INVALID-SCALE-LENGTH';
+        message: string;
+      };
+    };
 
 export const calculateFretPosition = (
   fretNumber: number,
@@ -23,7 +23,7 @@ export const calculateFretPosition = (
         code: 'INVALID-FRET-NUMBER',
         message: 'Fret number must be a non-negative integer.',
       },
-    }
+    };
   }
   if (!Number.isFinite(scaleLength) || scaleLength <= 0) {
     return {
@@ -32,8 +32,8 @@ export const calculateFretPosition = (
         code: 'INVALID-SCALE-LENGTH',
         message: 'Scale length must be a positive, finite number.',
       },
-    }
+    };
   }
 
-  return { ok: true, value: scaleLength * (1 - 2 ** (-fretNumber / 12)) }
-}
+  return { ok: true, value: scaleLength * (1 - 2 ** (-fretNumber / 12)) };
+};
