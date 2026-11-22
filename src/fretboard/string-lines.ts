@@ -1,22 +1,19 @@
 export interface StringLine {
-  xAtNut: number
-  yAtNut: number
-  xAtBridge: number
-  yAtBridge: number
+  xAtNut: number;
+  yAtNut: number;
+  xAtBridge: number;
+  yAtBridge: number;
 }
 
 export type StringLinesResult =
   | { ok: true; value: StringLine[] }
   | {
-      ok: false
+      ok: false;
       error: {
-        code:
-          | 'INVALID-SCALE-LENGTH'
-          | 'INVALID-STRING-COUNT'
-          | 'INVALID-STRING-SPACING'
-        message: string
-      }
-    }
+        code: 'INVALID-SCALE-LENGTH' | 'INVALID-STRING-COUNT' | 'INVALID-STRING-SPACING';
+        message: string;
+      };
+    };
 
 /**
  * Calculates string line endpoints, with spacing measured between the centers
@@ -35,7 +32,7 @@ export const calculateStringLines = (
         code: 'INVALID-SCALE-LENGTH',
         message: 'Scale length must be a positive, finite number.',
       },
-    }
+    };
   }
   if (!Number.isInteger(numberOfStrings) || numberOfStrings < 2) {
     return {
@@ -44,7 +41,7 @@ export const calculateStringLines = (
         code: 'INVALID-STRING-COUNT',
         message: 'Number of strings must be an integer of at least 2.',
       },
-    }
+    };
   }
   if (
     !Number.isFinite(stringSpacingAtNut) ||
@@ -58,14 +55,14 @@ export const calculateStringLines = (
         code: 'INVALID-STRING-SPACING',
         message: 'String spacing at the nut and bridge must be positive, finite numbers.',
       },
-    }
+    };
   }
 
-  const intervals = numberOfStrings - 1
-  const nutSpacingPerInterval = stringSpacingAtNut / intervals
-  const bridgeSpacingPerInterval = stringSpacingAtBridge / intervals
-  const nutTopStringY = -stringSpacingAtNut / 2
-  const bridgeTopStringY = -stringSpacingAtBridge / 2
+  const intervals = numberOfStrings - 1;
+  const nutSpacingPerInterval = stringSpacingAtNut / intervals;
+  const bridgeSpacingPerInterval = stringSpacingAtBridge / intervals;
+  const nutTopStringY = -stringSpacingAtNut / 2;
+  const bridgeTopStringY = -stringSpacingAtBridge / 2;
 
   return {
     ok: true,
@@ -75,5 +72,5 @@ export const calculateStringLines = (
       xAtBridge: scaleLength,
       yAtBridge: bridgeTopStringY + index * bridgeSpacingPerInterval,
     })),
-  }
-}
+  };
+};

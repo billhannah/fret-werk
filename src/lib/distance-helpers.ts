@@ -12,14 +12,14 @@ const unitPrecision: Record<lengthUnit, number> = {
 };
 
 export const convertDistanceFromMM = (value: number, toUnit: lengthUnit) => {
-  return precisionRound((value / unitConversionFactors[toUnit]), unitPrecision[toUnit]);
+  return precisionRound(value / unitConversionFactors[toUnit], unitPrecision[toUnit]);
 };
 
 export const convertDistanceToMM = (value: number, toUnit: lengthUnit) => {
-  return precisionRound((value * unitConversionFactors[toUnit]), unitPrecision[toUnit]);
-}
+  return precisionRound(value * unitConversionFactors[toUnit], unitPrecision[toUnit]);
+};
 
 const precisionRound = (value: number, precision: number): number => {
-  const factor = 10 ** precision
-  return Math.round(value * factor) / factor
-}
+  const factor = 10 ** precision;
+  return Math.round(value * factor) / factor;
+};
