@@ -5,6 +5,7 @@ import type { Settings, SettingsContext } from '../SettingsContext.ts';
 import { settingsKey } from '../SettingsContext.ts';
 import { provide, reactive } from 'vue';
 import FretboardDrawing from '../fretboard/fretboard-drawing.vue';
+import Section from './section/index.vue';
 
 const initialSettings: Settings = {
   scaleLength: {
@@ -49,8 +50,12 @@ provide(settingsKey, settingsContext);
 <template>
   <Header />
   <main class="main">
-    <SettingsForm />
-    <FretboardDrawing />
+    <Section title="Fretboard Settings">
+      <SettingsForm />
+    </Section>
+    <Section title="Fretboard Diagram">
+      <FretboardDrawing />
+    </Section>
   </main>
 </template>
 
