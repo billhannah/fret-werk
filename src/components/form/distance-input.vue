@@ -79,8 +79,9 @@ const updateDisplayUnit = (event: Event) => {
 <style scoped>
 .measurement-input {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0;
+  width: 100%;
   min-width: 0;
 }
 
@@ -96,6 +97,8 @@ const updateDisplayUnit = (event: Event) => {
 
 .measurement-value {
   border-radius: var(--input-border-radius) 0 0 var(--input-border-radius);
+  width: 100%;
+  min-width: 0;
 }
 
 .measurement-unit {
