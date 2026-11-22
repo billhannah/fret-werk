@@ -100,6 +100,43 @@ const fretLines = computed(() => {
   return { ok: true as const, value: frets };
 });
 
+const fretMarkers = computed(() => {
+  if (!fretLines.value.ok || !heelPosition.value.ok) {
+    return [];
+  }
+
+  const markers = [];
+  let previousFretPosition = 0;
+  const [topEdge, bottomEdge] = edgeLines.value;
+
+  for (const fret of fretLines.value.value) {
+    const markerIndex = fret.fretNumber % 12;
+    if ([3, 5, 7, 9].includes(markerIndex) || markerIndex === 0) {
+      const x = (previousFretPosition + fret.x) / 2;
+      const edgeRatio = x / heelPosition.value.value;
+      const yAtTop = topEdge.yAtNut + (topEdge.yAtHeel - topEdge.yAtNut) * edgeRatio;
+      const yAtBottom = bottomEdge.yAtNut + (bottomEdge.yAtHeel - bottomEdge.yAtNut) * edgeRatio;
+      const markerYs =
+        markerIndex === 0
+          ? [yAtTop + (yAtBottom - yAtTop) / 3, yAtTop + (2 * (yAtBottom - yAtTop)) / 3]
+          : [(yAtTop + yAtBottom) / 2];
+
+      markers.push(
+        ...markerYs.map((y, index) => ({
+          fretNumber: fret.fretNumber,
+          index,
+          x,
+          y,
+        })),
+      );
+    }
+
+    previousFretPosition = fret.x;
+  }
+
+  return markers;
+});
+
 const viewBox = computed(() => {
   if (!stringLines.value.ok || !heelPosition.value.ok || !fretLines.value.ok) {
     return undefined;
@@ -151,6 +188,27 @@ const viewBox = computed(() => {
         :x2="line.x"
         :y2="line.yAtBottom"
       />
+      <g
+        v-for="marker in fretMarkers"
+        :key="`marker-${marker.fretNumber}-${marker.index}`"
+        class="fret-marker"
+      >
+        <circle :cx="marker.x" :cy="marker.y" r="2.5" />
+        <line
+          class="fret-marker-center"
+          :x1="marker.x - 2.5"
+          :y1="marker.y"
+          :x2="marker.x + 2.5"
+          :y2="marker.y"
+        />
+        <line
+          class="fret-marker-center"
+          :x1="marker.x"
+          :y1="marker.y - 2.5"
+          :x2="marker.x"
+          :y2="marker.y + 2.5"
+        />
+      </g>
       <line
         v-for="(line, index) in edgeLines"
         :key="`edge-${index}`"
@@ -179,6 +237,19 @@ const viewBox = computed(() => {
 .fret {
   stroke: red;
   stroke-width: 1;
+}
+
+.fret-marker {
+  fill: goldenrod;
+  stroke: black;
+  stroke-width: 0.5;
+}
+
+.fret-marker-center {
+  stroke: black;
+  stroke-width: 0.6;
+  stroke-dasharray: 0.1 1;
+  stroke-linecap: round;
 }
 
 .string {
