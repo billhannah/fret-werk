@@ -9,6 +9,17 @@ const settingsContext = inject(settingsKey);
 if (!settingsContext) {
   throw new Error('Settings context was not provided.');
 }
+
+const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Event) => {
+  if (!(event.target instanceof HTMLInputElement)) {
+    return;
+  }
+
+  const value = event.target.valueAsNumber;
+  if (Number.isFinite(value)) {
+    settingsContext.updateSettings(key, value);
+  }
+};
 </script>
 
 <template>
@@ -40,19 +51,18 @@ if (!settingsContext) {
     <FormField label="Number of Frets" for="number-of-frets">
       <NumericalInput
         id="number-of-frets"
-        type="number"
-        min="1"
+        :min="1"
         :value="settingsContext.settings.numberOfFrets"
-        @input="(event) => settingsContext.updateSettings('numberOfFrets', parseInt(event.target.value))"
+        @input="updateNumberSetting('numberOfFrets', $event)"
       />
     </FormField>
     <FormField label="Number of Strings" for="number-of-strings">
       <NumericalInput
         id="number-of-strings"
-        min="2"
-        step="1"
+        :min="2"
+        :step="1"
         :value="settingsContext.settings.numberOfStrings"
-        @input="(event) => settingsContext.updateSettings('numberOfStrings', parseInt(event.target.value))"
+        @input="updateNumberSetting('numberOfStrings', $event)"
       />
     </FormField>
     <FormField label="Fretboard Overhang at Nut" for="fretboard-overhang-at-nut">
@@ -60,7 +70,12 @@ if (!settingsContext) {
         id="fretboard-overhang-at-nut"
         :value="settingsContext.settings.fretboardOverhang.atNut"
         label="Fretboard Overhang at Nut"
-        @update:value="settingsContext.updateSettings('fretboardOverhang', { ...settingsContext.settings.fretboardOverhang, atNut: $event })"
+        @update:value="
+          settingsContext.updateSettings('fretboardOverhang', {
+            ...settingsContext.settings.fretboardOverhang,
+            atNut: $event,
+          })
+        "
       />
     </FormField>
     <FormField label="Fretboard Overhang at Heel" for="fretboard-overhang-at-heel">
@@ -68,7 +83,12 @@ if (!settingsContext) {
         id="fretboard-overhang-at-heel"
         :value="settingsContext.settings.fretboardOverhang.atHeel"
         label="Fretboard Overhang at Heel"
-        @update:value="settingsContext.updateSettings('fretboardOverhang', { ...settingsContext.settings.fretboardOverhang, atHeel: $event })"
+        @update:value="
+          settingsContext.updateSettings('fretboardOverhang', {
+            ...settingsContext.settings.fretboardOverhang,
+            atHeel: $event,
+          })
+        "
       />
     </FormField>
   </form>

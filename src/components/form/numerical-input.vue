@@ -13,8 +13,8 @@ const { id, value, min, step } = defineProps<{
     :name="id"
     :value="value"
     type="number"
-    :min="min || 0"
-    :step="step || 'any'"
+    :min="min ?? 0"
+    :step="step ?? 'any'"
     inputmode="numeric"
     class="input"
   />
