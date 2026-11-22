@@ -29,5 +29,7 @@ const { id, value, min, step } = defineProps<{
   font: inherit;
   height: var(--input-height);
   padding: var(--input-padding);
+  width: 100%;
+  min-width: 0;
 }
 </style>
