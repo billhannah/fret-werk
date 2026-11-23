@@ -24,7 +24,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
 
 <template>
   <form class="settings-form" @submit.prevent>
-    <FormField for="scale-length" label="Scale Length">
+    <FormField for="scale-length" label="Scale Length" help-text="TODO: Add description.">
       <DistanceInput
         id="scale-length"
         :value="settingsContext.settings.scaleLength"
@@ -32,7 +32,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @update:value="settingsContext.updateSettings('scaleLength', $event)"
       />
     </FormField>
-    <FormField for="nut-width" label="Nut Width">
+    <FormField for="nut-width" label="Nut Width" help-text="TODO: Add description.">
       <DistanceInput
         id="nut-width"
         :value="settingsContext.settings.nutWidth"
@@ -40,7 +40,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @update:value="settingsContext.updateSettings('nutWidth', $event)"
       />
     </FormField>
-    <FormField for="bridge-width" label="Bridge width">
+    <FormField for="bridge-width" label="Bridge width" help-text="TODO: Add description.">
       <DistanceInput
         id="bridge-width"
         :value="settingsContext.settings.bridgeWidth"
@@ -48,7 +48,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @update:value="settingsContext.updateSettings('bridgeWidth', $event)"
       />
     </FormField>
-    <FormField label="Number of Frets" for="number-of-frets">
+    <FormField label="Number of Frets" for="number-of-frets" help-text="TODO: Add description.">
       <NumericalInput
         id="number-of-frets"
         :min="1"
@@ -56,7 +56,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @input="updateNumberSetting('numberOfFrets', $event)"
       />
     </FormField>
-    <FormField label="Number of Strings" for="number-of-strings">
+    <FormField label="Number of Strings" for="number-of-strings" help-text="TODO: Add description.">
       <NumericalInput
         id="number-of-strings"
         :min="2"
@@ -65,7 +65,11 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @input="updateNumberSetting('numberOfStrings', $event)"
       />
     </FormField>
-    <FormField label="Fretboard Overhang at Nut" for="fretboard-overhang-at-nut">
+    <FormField
+      label="Fretboard Overhang at Nut"
+      for="fretboard-overhang-at-nut"
+      help-text="TODO: Add description."
+    >
       <DistanceInput
         id="fretboard-overhang-at-nut"
         :value="settingsContext.settings.fretboardOverhang.atNut"
@@ -78,7 +82,11 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         "
       />
     </FormField>
-    <FormField label="Fretboard Overhang at Heel" for="fretboard-overhang-at-heel">
+    <FormField
+      label="Fretboard Overhang at Heel"
+      for="fretboard-overhang-at-heel"
+      help-text="TODO: Add description."
+    >
       <DistanceInput
         id="fretboard-overhang-at-heel"
         :value="settingsContext.settings.fretboardOverhang.atHeel"
