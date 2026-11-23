@@ -5,6 +5,7 @@ import { inject } from 'vue';
 import { settingsKey } from '../../SettingsContext.ts';
 import NumericalInput from './numerical-input.vue';
 import scaleLengthHelp from '../help/scale-length-help.fragment.html?raw';
+import nutWidthHelp from '../help/nut-width-help.fragment.html?raw';
 
 const settingsContext = inject(settingsKey);
 if (!settingsContext) {
@@ -33,7 +34,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @update:value="settingsContext.updateSettings('scaleLength', $event)"
       />
     </FormField>
-    <FormField for="nut-width" label="Nut Width" help-text="TODO: Add description.">
+    <FormField for="nut-width" label="Nut Width" :help-text="nutWidthHelp">
       <DistanceInput
         id="nut-width"
         :value="settingsContext.settings.nutWidth"
