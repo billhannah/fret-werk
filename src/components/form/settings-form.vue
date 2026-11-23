@@ -6,6 +6,7 @@ import { settingsKey } from '../../SettingsContext.ts';
 import NumericalInput from './numerical-input.vue';
 import scaleLengthHelp from '../help/scale-length-help.fragment.html?raw';
 import nutWidthHelp from '../help/nut-width-help.fragment.html?raw';
+import bridgeWidthHelp from '../help/bridge-width-help.fragment.html?raw';
 
 const settingsContext = inject(settingsKey);
 if (!settingsContext) {
@@ -42,7 +43,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @update:value="settingsContext.updateSettings('nutWidth', $event)"
       />
     </FormField>
-    <FormField for="bridge-width" label="Bridge width" help-text="TODO: Add description.">
+    <FormField for="bridge-width" label="Bridge width" :help-text="bridgeWidthHelp">
       <DistanceInput
         id="bridge-width"
         :value="settingsContext.settings.bridgeWidth"
