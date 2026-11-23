@@ -51,7 +51,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @update:value="settingsContext.updateSettings('bridgeWidth', $event)"
       />
     </FormField>
-    <FormField label="Number of Frets" for="number-of-frets" help-text="TODO: Add description.">
+    <FormField label="Number of Frets" for="number-of-frets">
       <NumericalInput
         id="number-of-frets"
         :min="1"
@@ -59,7 +59,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         @input="updateNumberSetting('numberOfFrets', $event)"
       />
     </FormField>
-    <FormField label="Number of Strings" for="number-of-strings" help-text="TODO: Add description.">
+    <FormField label="Number of Strings" for="number-of-strings">
       <NumericalInput
         id="number-of-strings"
         :min="2"
