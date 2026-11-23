@@ -33,10 +33,10 @@ const openHelp = () => {
       :aria-labelledby="`${props.id}-help-title`"
     >
       <div class="dialog-content">
-        <h2 :id="`${props.id}-help-title`" class="dialog-title">
+        <h2 :id="`${props.id}-help-title`" class="dialog-title" tabindex="-1" autofocus>
           {{ props.label }}
         </h2>
-        <p class="dialog-description">{{ props.helpText }}</p>
+        <div class="dialog-description" v-html="props.helpText"></div>
         <form method="dialog" class="dialog-actions">
           <button class="close-button" type="submit">Close</button>
         </form>
@@ -68,6 +68,7 @@ const openHelp = () => {
 .help-dialog {
   width: min(32rem, calc(100vw - 2rem));
   max-height: min(80vh, 40rem);
+  overflow: hidden;
   padding: 0;
   border: 1px solid var(--shadow-grey);
   border-radius: 0.5rem;
@@ -78,6 +79,9 @@ const openHelp = () => {
   background: rgb(0 0 0 / 45%);
 }
 .dialog-content {
+  display: flex;
+  flex-direction: column;
+  max-height: min(80vh, 40rem);
   padding: 1.25rem;
 }
 .dialog-title {
@@ -85,13 +89,20 @@ const openHelp = () => {
   font-size: 1.125rem;
 }
 .dialog-description {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
   margin: 0.75rem 0 1.25rem;
   line-height: 1.5;
+}
+.dialog-description p {
+  margin: 0 0 1rem;
   white-space: pre-wrap;
 }
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
+  flex: 0 0 auto;
 }
 .close-button {
   min-height: var(--input-height);

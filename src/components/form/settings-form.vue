@@ -4,6 +4,7 @@ import DistanceInput from './distance-input.vue';
 import { inject } from 'vue';
 import { settingsKey } from '../../SettingsContext.ts';
 import NumericalInput from './numerical-input.vue';
+import scaleLengthHelp from '../help/scale-length-help.fragment.html?raw';
 
 const settingsContext = inject(settingsKey);
 if (!settingsContext) {
@@ -24,7 +25,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
 
 <template>
   <form class="settings-form" @submit.prevent>
-    <FormField for="scale-length" label="Scale Length" help-text="TODO: Add description.">
+    <FormField for="scale-length" label="Scale Length" :help-text="scaleLengthHelp">
       <DistanceInput
         id="scale-length"
         :value="settingsContext.settings.scaleLength"
