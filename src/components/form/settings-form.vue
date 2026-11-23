@@ -7,6 +7,8 @@ import NumericalInput from './numerical-input.vue';
 import scaleLengthHelp from '../help/scale-length-help.fragment.html?raw';
 import nutWidthHelp from '../help/nut-width-help.fragment.html?raw';
 import bridgeWidthHelp from '../help/bridge-width-help.fragment.html?raw';
+import nutOverhangHelp from '../help/fretboard-overhang-nut-help.fragement.html?raw';
+import heelOverhangHelp from '../help/fretboard-overhang-heel-help.fragement.html?raw';
 
 const settingsContext = inject(settingsKey);
 if (!settingsContext) {
@@ -71,7 +73,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
     <FormField
       label="Fretboard Overhang at Nut"
       for="fretboard-overhang-at-nut"
-      help-text="TODO: Add description."
+      :help-text="nutOverhangHelp"
     >
       <DistanceInput
         id="fretboard-overhang-at-nut"
@@ -88,7 +90,7 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
     <FormField
       label="Fretboard Overhang at Heel"
       for="fretboard-overhang-at-heel"
-      help-text="TODO: Add description."
+      :help-text="heelOverhangHelp"
     >
       <DistanceInput
         id="fretboard-overhang-at-heel"
