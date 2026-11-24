@@ -9,7 +9,7 @@ if (!settingsContext) {
   throw new Error('Settings context was not provided.');
 }
 
-const margin = 5;
+const margin = 15;
 
 const stringLines = computed(() => {
   const { scaleLength, nutWidth, bridgeWidth, numberOfStrings } = settingsContext.settings;
@@ -19,6 +19,21 @@ const stringLines = computed(() => {
     nutWidth.value,
     bridgeWidth.value,
   );
+});
+
+const stringDrawingLines = computed(() => {
+  if (!stringLines.value.ok) {
+    return [];
+  }
+
+  const { scaleLength, nutThickness, fretboardExtensionBeforeNut } = settingsContext.settings;
+  const startDistance = nutThickness.value + fretboardExtensionBeforeNut.value + margin;
+  return stringLines.value.value.map((line) => ({
+    xAtHead: -startDistance,
+    yAtHead: line.yAtNut - (startDistance / scaleLength.value) * (line.yAtBridge - line.yAtNut),
+    xAtBridge: line.xAtBridge,
+    yAtBridge: line.yAtBridge,
+  }));
 });
 
 const heelPosition = computed(() =>
@@ -72,6 +87,53 @@ const edgeLines = computed(() => {
     },
   ];
 });
+
+const headEndLines = computed(() => {
+  if (!heelPosition.value.ok) {
+    return [];
+  }
+
+  const { nutThickness, fretboardExtensionBeforeNut } = settingsContext.settings;
+  const distance = nutThickness.value + fretboardExtensionBeforeNut.value;
+  return edgeLines.value.map((line) => ({
+    x: -distance,
+    y: line.yAtNut + ((line.yAtNut - line.yAtHeel) / line.xAtHeel) * distance,
+  }));
+});
+
+const nutBackLines = computed(() => {
+  if (!heelPosition.value.ok) {
+    return [];
+  }
+
+  const thickness = settingsContext.settings.nutThickness.value;
+  return edgeLines.value.map((line) => ({
+    x: -thickness,
+    y: line.yAtNut + ((line.yAtNut - line.yAtHeel) / line.xAtHeel) * thickness,
+  }));
+});
+
+const nutPoints = computed(() => {
+  if (edgeLines.value.length !== 2 || nutBackLines.value.length !== 2) {
+    return '';
+  }
+
+  return [
+    `0,${edgeLines.value[0].yAtNut}`,
+    `${nutBackLines.value[0].x},${nutBackLines.value[0].y}`,
+    `${nutBackLines.value[1].x},${nutBackLines.value[1].y}`,
+    `0,${edgeLines.value[1].yAtNut}`,
+  ].join(' ');
+});
+
+const boardSideLines = computed(() =>
+  edgeLines.value.map((line, index) => ({
+    x1: headEndLines.value[index].x,
+    y1: headEndLines.value[index].y,
+    x2: line.xAtHeel,
+    y2: line.yAtHeel,
+  })),
+);
 
 const fretLines = computed(() => {
   if (!heelPosition.value.ok) {
@@ -144,12 +206,16 @@ const viewBox = computed(() => {
 
   const yValues = [
     ...stringLines.value.value.flatMap((line) => [line.yAtNut, line.yAtBridge]),
+    ...stringDrawingLines.value.map((line) => line.yAtHead),
     ...edgeLines.value.flatMap((line) => [line.yAtNut, line.yAtHeel]),
+    ...headEndLines.value.map((line) => line.y),
   ];
   const minY = Math.min(...yValues);
   const maxY = Math.max(...yValues);
+  const { nutThickness, fretboardExtensionBeforeNut } = settingsContext.settings;
+  const distance = nutThickness.value + fretboardExtensionBeforeNut.value;
 
-  return `${-margin} ${minY - margin} ${settingsContext.settings.scaleLength.value + margin * 2} ${maxY - minY + margin * 2}`;
+  return `${-distance - margin} ${minY - margin} ${settingsContext.settings.scaleLength.value + distance + margin * 2} ${maxY - minY + margin * 2}`;
 });
 </script>
 
@@ -163,12 +229,13 @@ const viewBox = computed(() => {
       preserveAspectRatio="xMidYMid meet"
       class="fretboard-drawing"
     >
+      <polygon class="nut" :points="nutPoints" />
       <line
-        v-for="(line, index) in stringLines.value"
+        v-for="(line, index) in stringDrawingLines"
         :key="`string-${index}`"
         class="string"
-        :x1="line.xAtNut"
-        :y1="line.yAtNut"
+        :x1="line.xAtHead"
+        :y1="line.yAtHead"
         :x2="line.xAtBridge"
         :y2="line.yAtBridge"
       />
@@ -210,13 +277,20 @@ const viewBox = computed(() => {
         />
       </g>
       <line
-        v-for="(line, index) in edgeLines"
+        v-for="(line, index) in boardSideLines"
         :key="`edge-${index}`"
         class="edge-line"
-        :x1="line.xAtNut"
-        :y1="line.yAtNut"
-        :x2="line.xAtHeel"
-        :y2="line.yAtHeel"
+        :x1="line.x1"
+        :y1="line.y1"
+        :x2="line.x2"
+        :y2="line.y2"
+      />
+      <line
+        class="fretboard-end"
+        :x1="headEndLines[0].x"
+        :y1="headEndLines[0].y"
+        :x2="headEndLines[1].x"
+        :y2="headEndLines[1].y"
       />
     </svg>
   </div>
@@ -265,6 +339,16 @@ const viewBox = computed(() => {
 
 .edge-line {
   stroke: black;
+}
+
+.fretboard-end {
+  stroke: black;
+}
+
+.nut {
+  fill: ivory;
+  stroke: black;
+  stroke-width: 0.4;
 }
 
 .drawing-error {

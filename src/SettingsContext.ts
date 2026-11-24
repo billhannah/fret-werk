@@ -10,6 +10,8 @@ export type length = {
 export interface Settings {
   scaleLength: length;
   nutWidth: length;
+  nutThickness: length;
+  fretboardExtensionBeforeNut: length;
   bridgeWidth: length;
   numberOfStrings: number;
   numberOfFrets: number;
