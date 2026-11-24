@@ -6,6 +6,8 @@ import { settingsKey } from '../../SettingsContext.ts';
 import NumericalInput from './numerical-input.vue';
 import scaleLengthHelp from '../help/scale-length-help.fragment.html?raw';
 import nutWidthHelp from '../help/nut-width-help.fragment.html?raw';
+import nutThicknessHelp from '../help/nut-thickness-help.fragment.html?raw';
+import fretboardOverhangBeforeNut from '../help/fretboard-extension-before-nut-help.fragment.html?raw';
 import bridgeWidthHelp from '../help/bridge-width-help.fragment.html?raw';
 import nutOverhangHelp from '../help/fretboard-overhang-nut-help.fragement.html?raw';
 import heelOverhangHelp from '../help/fretboard-overhang-heel-help.fragement.html?raw';
@@ -43,6 +45,26 @@ const updateNumberSetting = (key: 'numberOfFrets' | 'numberOfStrings', event: Ev
         :value="settingsContext.settings.nutWidth"
         label="Nut Width"
         @update:value="settingsContext.updateSettings('nutWidth', $event)"
+      />
+    </FormField>
+    <FormField for="nut-thickness" label="Nut Thickness" :help-text="nutThicknessHelp">
+      <DistanceInput
+        id="nut-thickness"
+        :value="settingsContext.settings.nutThickness"
+        label="Nut Thickness"
+        @update:value="settingsContext.updateSettings('nutThickness', $event)"
+      />
+    </FormField>
+    <FormField
+      for="fretboard-extension-before-nut"
+      label="Fretboard Extension Before Nut"
+      :help-text="fretboardOverhangBeforeNut"
+    >
+      <DistanceInput
+        id="fretboard-extension-before-nut"
+        :value="settingsContext.settings.fretboardExtensionBeforeNut"
+        label="Fretboard Extension Before Nut"
+        @update:value="settingsContext.updateSettings('fretboardExtensionBeforeNut', $event)"
       />
     </FormField>
     <FormField for="bridge-width" label="Bridge width" :help-text="bridgeWidthHelp">

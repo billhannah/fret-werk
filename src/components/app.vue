@@ -16,6 +16,14 @@ const initialSettings: Settings = {
     value: 35.5,
     displayUnit: 'mm',
   },
+  nutThickness: {
+    value: 3.175,
+    displayUnit: 'mm',
+  },
+  fretboardExtensionBeforeNut: {
+    value: 1.524,
+    displayUnit: 'mm',
+  },
   bridgeWidth: {
     value: 52.4,
     displayUnit: 'mm',
